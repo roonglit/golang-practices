@@ -1,0 +1,9 @@
+version: "2"
+sql:
+  - engine: "mysql"
+    queries: "db/query"
+    schema: "db/migrate"
+    gen:
+      go:
+        package: "model"
+        out: "app/model"

@@ -43,7 +43,7 @@ func main() {
 	fmt.Printf("My second num is %d\n", x)
 
 	// 4. Calling func from a module
-	// Need to initialize "go mod init"
+	// Need to initiaalize "go mod init"
 	// Then create an_inner_module module inside
 	// Then refer to that module here
 	inner.Show2Nums(x, 4)

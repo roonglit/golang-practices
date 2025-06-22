@@ -1,6 +1,10 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 type User struct {
 	Name  string `json:"name"`
@@ -13,6 +17,11 @@ type Search struct {
 
 type UserUri struct {
 	Name string `uri:"name" binding:"required"`
+}
+
+type RequestHeader struct {
+	Authorization string `header:"Authorization" binding:"required"` // Map "Authorization" header
+	UserAgent     string `header:"User-Agent" binding:"required"`    // Map "User-Agent" header
 }
 
 func main() {
@@ -46,6 +55,23 @@ func main() {
 			return
 		}
 		c.JSON(200, gin.H{"message": "Hello " + user.Name})
+	})
+
+	// Request headers
+	r.GET("/header", func(c *gin.Context) {
+		var headers RequestHeader
+
+		// Bind header values to the struct
+		if err := c.ShouldBindHeader(&headers); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Respond with the extracted header values
+		c.JSON(http.StatusOK, gin.H{
+			"Authorization": headers.Authorization,
+			"User-Agent":    headers.UserAgent,
+		})
 	})
 
 	r.Run()

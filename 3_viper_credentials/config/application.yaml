@@ -1,3 +1,0 @@
-DB_DRIVER: mysql
-DB_SOURCE: root:password@tcp(127.0.0.1:3306)/golang_development?parseTime=true
-SERVER_ADDRESS: 0.0.0.0:8080

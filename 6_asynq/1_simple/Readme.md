@@ -4,4 +4,7 @@
 - `go mod init asynq-demo`
 - `go get github.com/hibiken/asynq`
 ### Start
-- `go run main.go`
+- Run worker
+    - `go run ./cmd/worker`
+- Run enqueue
+    - `go run ./cmd/enqueue`

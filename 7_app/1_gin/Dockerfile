@@ -18,6 +18,7 @@ WORKDIR /app
 
 # Copy required files
 COPY --from=builder /app/main .
+COPY ./start.sh /app/start.sh
 
 ENV GIN_MODE=release
 ENV TZ=Asia/Bangkok

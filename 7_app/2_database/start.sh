@@ -6,7 +6,7 @@ set -e
 if [ ! -z "$MASTER_KEY" ]; then
   echo "Creating master.key file from environment variable"
   echo "$MASTER_KEY" > /app/config/master.key
-  chmod 600 master.key
+  chmod 600 /app/config/master.key
 fi
 
 echo "run db migration"

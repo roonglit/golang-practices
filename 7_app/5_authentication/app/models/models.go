@@ -16,3 +16,12 @@ type Todo struct {
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
 }
+
+type User struct {
+	ID           int32
+	Username     string
+	PasswordHash string
+	Email        string
+	CreatedAt    pgtype.Timestamp
+	UpdatedAt    pgtype.Timestamp
+}

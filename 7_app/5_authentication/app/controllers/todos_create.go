@@ -17,7 +17,7 @@ func (s *Server) CreateTodo(c *gin.Context) {
 		return
 	}
 
-	createdTodo, err := s.Store.CreateTodo(c.Request.Context(), createTodoParams(todo))
+	createdTodo, err := s.Store.CreateTodo(c, createTodoParams(todo))
 	if err != nil {
 		fmt.Println("Error creating todo:", err)
 		c.JSON(http.StatusInternalServerError, InternalServerError(err))

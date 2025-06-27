@@ -1,13 +1,16 @@
 package controllers
 
+import "learning/app/middlewares"
+
 func (s *Server) SetupRoutes() {
 	s.Router.GET("/", s.Health)
 
 	s.Router.POST("/users/signup", s.CreateUser)
 	s.Router.POST("/users/login", s.LoginUser)
 
-	s.Router.POST("/todos", s.CreateTodo)
-	s.Router.GET("/todos", s.GetTodos)
-	s.Router.PUT("/todos/:id", s.UpdateTodo)
-	s.Router.DELETE("/todos/:id", s.DestroyTodo)
+	authRoutes := s.Router.Group("/").Use(middlewares.RequireUser(s.TokenMaker))
+	authRoutes.POST("/todos", s.CreateTodo)
+	authRoutes.GET("/todos", s.GetTodos)
+	authRoutes.PUT("/todos/:id", s.UpdateTodo)
+	authRoutes.DELETE("/todos/:id", s.DestroyTodo)
 }

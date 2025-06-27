@@ -16,6 +16,7 @@ type Querier interface {
 	GetTodos(ctx context.Context) ([]Todo, error)
 	GetUser(ctx context.Context, id int32) (User, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
+	GetUserByUsername(ctx context.Context, username string) (User, error)
 	UpdateTodo(ctx context.Context, arg UpdateTodoParams) (Todo, error)
 }
 

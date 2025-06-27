@@ -17,6 +17,7 @@ import (
 
 var testConfig *config.Config
 var testStore models.Store
+var connPool *pgxpool.Pool
 
 func TestControllers(t *testing.T) {
 	RegisterFailHandler(Fail)
@@ -36,7 +37,7 @@ var _ = AfterSuite(func() {
 })
 
 var _ = AfterEach(func() {
-	// ClearDatabase(connPool)
+	clearDatabase(connPool)
 })
 
 func loadConfig() *config.Config {
@@ -52,23 +53,42 @@ func loadConfig() *config.Config {
 	}
 
 	// Debug: Print the loaded config
-	fmt.Printf("Loaded config - DBUri: %s, ServerAddress: %s\n", config.DBUri, config.ServerAddress)
+	// fmt.Printf("Loaded config - DBUri: %s, ServerAddress: %s\n", config.DBUri, config.ServerAddress)
 
 	return &config
 }
 
 func connectDb(config *config.Config) models.Store {
-	fmt.Println("Connecting to database... ->", config.DBUri)
 	dbConfig, err := pgxpool.ParseConfig(config.DBUri)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Unable to parse DB_URI")
 	}
 
-	connPool, err := pgxpool.New(context.Background(), dbConfig.ConnString())
+	connPool, err = pgxpool.New(context.Background(), dbConfig.ConnString())
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot connect to db")
 	}
 
 	store := models.NewStore(connPool)
 	return store
+}
+
+func clearDatabase(pool *pgxpool.Pool) error {
+	ctx := context.Background()
+
+	tableNames := []string{
+		"todos",
+	}
+
+	var truncateStmt string
+	for _, tableName := range tableNames {
+		truncateStmt += fmt.Sprintf("TRUNCATE %s CASCADE; ", tableName)
+	}
+
+	// Execute the truncate statement
+	if _, err := pool.Exec(ctx, truncateStmt); err != nil {
+		return fmt.Errorf("error executing truncate: %w", err)
+	}
+
+	return nil
 }

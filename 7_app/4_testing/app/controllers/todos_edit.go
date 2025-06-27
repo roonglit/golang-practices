@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"learning/app/models"
 	"net/http"
 	"time"
@@ -23,6 +24,7 @@ func (s *Server) UpdateTodo(c *gin.Context) {
 	}
 	updatedTodo, err := s.Store.UpdateTodo(c.Request.Context(), updateTodoParams(resource.ID, todo))
 	if err != nil {
+		fmt.Println("Error updating todo:", err)
 		c.JSON(http.StatusInternalServerError, InternalServerError(err))
 		return
 	}

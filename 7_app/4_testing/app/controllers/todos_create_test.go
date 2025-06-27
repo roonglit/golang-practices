@@ -2,6 +2,7 @@ package controllers_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"learning/app/controllers"
@@ -40,5 +41,15 @@ var _ = Describe("POST /todos", func() {
 
 		testServer.Router.ServeHTTP(recorder, req)
 		Expect(recorder.Code).To(Equal(http.StatusCreated))
+
+		var body controllers.Todo
+		err = json.Unmarshal(recorder.Body.Bytes(), &body)
+		Expect(err).NotTo(HaveOccurred())
+
+		todo, err := testStore.GetTodo(context.Background(), int32(body.ID))
+		Expect(err).NotTo(HaveOccurred())
+		Expect(todo.Title).To(Equal(requestBody["title"]))
+		Expect(todo.Description.String).To(Equal(requestBody["description"]))
+		Expect(todo.Completed.Bool).To(Equal(requestBody["completed"]))
 	})
 })
